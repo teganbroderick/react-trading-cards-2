@@ -19,10 +19,14 @@
 
 {% block js %}
   <script>
-    const getCardData() {
+    function getCardData() {
       // Get the up to date card data from DB.
 
-      $.get('/cards.json', insertCardData);
+      $.get('/cards.json', insertCardData);// AJAX FUNCTION
+      // In /cards.json, the back end issues a SQLAlchemy query to get all the 
+      //cards out of the database. Then, each card is turned into a dictionary,
+      // and sent back to the front end as a JSON object.
+      //When the response returns, the function insertCardData is called.
     }
 
     const insertCardData = (response) => {
@@ -30,15 +34,21 @@
       // insert it into the page as an HTML string.
 
       const listOfCards = response.cards;
+      //The JSON response from the /cards.json route is provided to this 
+      //function as a parameter, response. Neat!
 
       const container = $('#container');
+      //Using JQuery, we select the container element on the page that is going
+      // to hold each trading card in the HTML.
 
       container.empty()
+      //We empty out the container. We’ll see the usefulness of this later!
 
       for (const currentCard of listOfCards) {
         if (currentCard.imgUrl === null){
           currentCard.imgUrl = '/static/img/placeholder.png';
         }
+
 
         container.append(`
           <div class='card'>
@@ -48,6 +58,11 @@
           </div>`
         );
       }
+    //We loop over each card in the response object, adding a <div> element
+    // and substituting in the values for each card using the data from the
+    // server.
+
+
     }
 
     const addNewCard = (evt) => {
@@ -55,17 +70,21 @@
       // This is an event handling function.
 
       // Get name that user typed in Name field.
-      const name = $('#nameField').val();
+      const name = $('#nameField').val(); //like request.args.get in flask
 
       // Get skill that user typed in Skill field.
       const skill = $('#skillField').val();
 
-      const formData = {
+      const formData = { //put info in a dictionary called formData
         skill: skill,
         name: name
       };
 
+      //AJAX POST
       $.post('/add-card', formData, (response) => {
+
+        //*Since we’re changing the database, we use an AJAX POST request to send this data back to a route on the back end called /add-card. If you check out this Flask route, you’ll see that we’re peeling the form data out of the request, and then using SQLAlchemy to add a new card to the database. *//
+
         // Great, so now we're back from the server.
         // A new card got added!
 
@@ -75,11 +94,16 @@
         // include the new card.
         // For information on how, go review this next function's
         // definition above.
+
         getCardData();
+
+        //* This is the code that will run when the POST request has successfully finished, and we’ve added the new card to the database. As you can see, we’re calling the getCardData() function again here!*//
       });
     }
 
 
+    
+    //EVENT LISTENER ATTACHED TO ADDCARD BUTTON
     // Attach the addNewCard function to the 'Add' button click.
     $('#addCard').on('click', addNewCard);
 

@@ -31,11 +31,37 @@ class TradingCard extends React.Component {
 }
 
 class TradingCardContainer extends React.Component {
+  constructor() {
+    super();
+
+    this.state = { cards: [] }; // Set initial value
+    this.updateCards = this.updateCards.bind(this);
+  }
+
+
+  getCardData() {
+    $.get('/cards.json', this.updateCards);
+  }
+
+
+  updateCards(response) {
+    //update the state to have one card object inside
+    const cards = response.cards;
+    this.setState({cards: cards});
+  }
+
+  componentDidMount() {
+    this.getCardData();
+  }
+
   render() {
     const tradingCards = [];
 
-    for (const currentCard of tradingCardData) {
-      paragraphs.push(
+    for (const currentCard of this.state.cards) { 
+      //this.state.cards renders the cards in our component’s state 
+      //instead of the static data defined in our file
+
+      tradingCards.push(
         <TradingCard
           key={currentCard.name}
           name={currentCard.name}
@@ -46,7 +72,7 @@ class TradingCardContainer extends React.Component {
     }
 
     return (
-      <div>{paragraphs}</div>
+      <div>{tradingCards}</div>
     );
   }
 }

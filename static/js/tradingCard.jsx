@@ -30,6 +30,7 @@ class TradingCard extends React.Component {
   }
 }
 
+
 class TradingCardContainer extends React.Component {
   constructor() {
     super();
@@ -54,6 +55,17 @@ class TradingCardContainer extends React.Component {
     this.getCardData();
   }
 
+  // render() {
+  //   // code that loops and creates cards here
+
+  //   return (
+  //     <div>
+  //       <TradingCardForm />
+  //       <div>{tradingCards}</div>
+  //     </div>
+  //   );
+  // }
+
   render() {
     const tradingCards = [];
 
@@ -73,6 +85,62 @@ class TradingCardContainer extends React.Component {
 
     return (
       <div>{tradingCards}</div>
+    );
+  }
+}
+
+class TradingCardForm extends React.Component {
+  constructor() {
+    super()
+
+    this.state = {
+      //set initial value for state
+      name: '',
+      skill: ''
+    };
+
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleSkillChange = this.handleSkillChange.bind(this);
+    this.addNewCard = this.addNewCard.bind(this);
+    //bind things because you need to bind them
+  }
+
+  addNewCard() {
+    // FIXME
+    alert('trying to add a new card!')
+  }
+
+  handleNameChange(e) {
+    this.setState({ name: e.target.value });
+    //set state to have a new name value
+  }
+
+  handleSkillChange(e) {
+    this.setState({ skill: e.target.value });
+    //set state to have a new skill value
+  }
+
+  render() {
+    return (
+      <form>
+        <label for="name">Name:</label>
+        <input
+          id="name"
+          type="text"
+          value={this.state.name}
+          onChange={this.handleNameChange}
+        />
+
+        <label for="skill">Skill:</label>
+        <input
+          id="skill"
+          type="text"
+          value={this.state.skill}
+          onChange={this.handleSkillChange}
+        />
+
+        <button onClick={this.addNewCard}>Add</button>
+      </form>
     );
   }
 }
